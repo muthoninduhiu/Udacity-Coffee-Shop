@@ -6,7 +6,7 @@ from jose import jwt
 from urllib.request import urlopen
 
 
-AUTH0_DOMAIN = 'dev-81qouixl.us.auth0.com'
+AUTH0_DOMAIN = 'fullstacksoni.us.auth0.com'
 ALGORITHMS = ['RS256']
 API_AUDIENCE = 'coffee'
 
@@ -151,7 +151,7 @@ def verify_decode_jwt(token):
    #raise Exception('Not Implemented')
 
 '''
-@TODO implement @requires_auth(permission) decorator method
+@DONE implement @requires_auth(permission) decorator method
     @INPUTS
         permission: string permission (i.e. 'post:drink')
 
