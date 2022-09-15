@@ -12,7 +12,7 @@ setup_db(app)
 CORS(app)
 
 '''
-@DONE uncomment the following line to initialize the datbase
+@DONE uncomment the following line to initialize the database
 !! NOTE THIS WILL DROP ALL RECORDS AND START YOUR DB FROM SCRATCH
 !! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
 !! Running this funciton will add one
@@ -53,7 +53,7 @@ def get_drinks():
 @app.route('/drinks_detail')
 @requires_auth('get:drinks-details')
 def get_drink_details(token):
-    #queries all drinks ij  the database
+    #queries all drinks in the database
     drinks = Drink.query.order_by(Drink.id).all()
 
     if len(drinks) == 0:
@@ -62,7 +62,7 @@ def get_drink_details(token):
     return jsonify({
         'success': True,
         'drinks': [drink.long() for drink in drinks]
-    })
+    }),200
 '''
 @DONE implement endpoint
     POST /drinks
@@ -91,7 +91,7 @@ def create_drink(token):
     return jsonify({
         'success': True,
         'drinks': [drink.long()]
-    })
+    }),200
 
 '''
 @DONE implement endpoint
@@ -109,11 +109,12 @@ def create_drink(token):
 def update_drink(token, drink_id):
     body = request.get_json()
 
-    try:
+    
         #get drink we want to update by ID
-        drink = Drink.query.filter(Drink.id == drink_id).one_or_none()
-        if drink is None:
-            abort(404)
+    drink = Drink.query.filter(Drink.id == drink_id).one_or_none()
+    if drink is None:
+        abort(404)
+    try:
             #we can change title or recipe
         if body.get("title"):
             drink.title = body.get('title')
@@ -121,15 +122,13 @@ def update_drink(token, drink_id):
             drink.recipe = json.dumps(body.get('recipe'))
 
         drink.update()
-
-        return jsonify({
-            'success': True,
-            'drinks': [drink.long()]
-        })
-
     except:
         abort(400)
 
+    return jsonify({
+            'success': True,
+            'drinks': [drink.long()]
+        })
 
 '''
 @DONE implement endpoint
@@ -149,7 +148,7 @@ def delete_drink(token, drink_id):
 
         if drink is None:
             abort(404)
-
+    
         drink.delete()
 
         return jsonify({
@@ -176,7 +175,7 @@ def unprocessable(error):
 
 
 '''
-@TODO implement error handlers using the @app.errorhandler(error) decorator
+@DONE implement error handlers using the @app.errorhandler(error) decorator
     each error handler should return (with approprate messages):
              jsonify({
                     "success": False,
@@ -185,14 +184,27 @@ def unprocessable(error):
                     }), 404
 
 '''
-
+@app.errorhandler(404)
+def unprocessable(error):
+    return jsonify({
+        "success": False,
+        "error": 404,
+        "message": "resource not found"
+    }), 404
 '''
-@TODO implement error handler for 404
+@DONE implement error handler for 404
     error handler should conform to general task above
 '''
 
 
 '''
-@TODO implement error handler for AuthError
+@DONE implement error handler for AuthError
     error handler should conform to general task above
 '''
+@app.errorhandler(401)
+def unprocessable(error):
+    return jsonify({
+        "success": False,
+        "error": 401,
+        "message": "Authentication Error"
+    }), 401
