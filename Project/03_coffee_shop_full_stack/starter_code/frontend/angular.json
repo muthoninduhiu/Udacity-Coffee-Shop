@@ -53,6 +53,7 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
+              "extractCss": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
@@ -180,15 +181,14 @@
     }
   },
   "cli": {
-    "defaultCollection": "@ionic/angular-toolkit",
-    "analytics": "2a7e4ae0-f168-4004-81e3-679f76ffd242"
+    "defaultCollection": "@ionic/angular-toolkit"
   },
   "schematics": {
     "@ionic/angular-toolkit:component": {
-      "style": "scss"
+      "styleext": "scss"
     },
     "@ionic/angular-toolkit:page": {
-      "style": "scss"
+      "styleext": "scss"
     }
   }
 }
