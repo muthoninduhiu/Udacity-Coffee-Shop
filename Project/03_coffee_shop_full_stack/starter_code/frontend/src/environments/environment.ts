@@ -6,9 +6,9 @@ export const environment = {
   production: false,
   apiServerUrl: 'http://127.0.0.1:5000', // the running FLASK api server url
   auth0: {
-    url: 'dev-81qouixl.us.auth0.com', // the auth0 domain prefix
+    url: 'fullstacksoni.us.auth0.com', // the auth0 domain prefix
     audience: 'coffee', // the audience set for the auth0 app
-    clientId: 'soDWHNRfDkUeOWJhD6FWIit6ymt7oEiu', // the client id generated for the auth0 app
+    clientId: 'BT8rgHv0bVlOHHpzPnh5JymjDJPCyadz', // the client id generated for the auth0 app
     callbackURL: 'http://localhost:8100', // the base url of the running ionic application. 
   }
 };
