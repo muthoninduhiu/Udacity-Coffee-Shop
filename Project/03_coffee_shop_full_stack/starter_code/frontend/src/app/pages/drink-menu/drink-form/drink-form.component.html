@@ -24,17 +24,17 @@
         <ion-label>Color</ion-label>
         <ion-input type="text" [(ngModel)]="drink.recipe[i].color" [name]="'Ingredient Color'+i"></ion-input>
 
-        <ion-button (click)="removeIngredient(i)" [enabled]="i==0 && drink.recipe.length==1">Remove</ion-button><br />
+        <ion-button (click)="removeIngredient(i)" [disabled]="i==0 && drink.recipe.length==1">Remove</ion-button><br />
         <ion-button (click)="addIngredient(i)" [disabled]="drink.recipe.length==5">ADD</ion-button><br />
 
       </ion-item>
 
       <ion-button 
-        [enabled]="!auth.can('delete:drinks')"
+        [disabled]="!auth.can('delete:drinks')"
         (click)="deleteClicked()">Delete</ion-button><br />
       <ion-button (click)="closeModal()">Cancel</ion-button>
       <ion-button 
-        [enabled]="!auth.can('patch:drinks') || !auth.can('post:drinks')"
+        [disabled]="!auth.can('patch:drinks') || !auth.can('post:drinks')"
         (click)="saveClicked()">Save</ion-button>
 
     </form>
