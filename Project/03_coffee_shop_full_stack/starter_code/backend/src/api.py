@@ -17,7 +17,7 @@ CORS(app)
 !! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
 !! Running this funciton will add one
 '''
-#db_drop_and_create_all()
+db_drop_and_create_all()
 
 # ROUTES
 '''
@@ -128,7 +128,7 @@ def update_drink(token, drink_id):
     return jsonify({
             'success': True,
             'drinks': [drink.long()]
-        })
+        }),200
 
 '''
 @DONE implement endpoint
@@ -154,7 +154,7 @@ def delete_drink(token, drink_id):
         return jsonify({
             'success': True,
             'deleted': drink_id
-        })
+        }),200
 
     except:
         abort(422)

@@ -32,29 +32,33 @@ class AuthError(Exception):
     return the token part of the header
 '''
 def get_token_auth_header():
-    if 'Authorization' not in request.headers:
-            raise AuthError({
-                'code': 'authorization_header_missing',
-                'description': 'Authorization header is expected.'
-            }, 401)
+   """Obtains the Access Token from the Authorization Header
+    """
+   auth = request.headers.get("Authorization", None)
+   if not auth:
+        raise AuthError({"code": "authorization_header_missing",
+                        "description":
+                        "Authorization header is expected"}, 401)
 
-    auth_header = request.headers['Authorization']
-    header_parts = auth_header.split(' ')
-#if authorization header doesnt have two parts then it isnt valid
-    if len(header_parts) != 2:
-            raise AuthError({
-                'code': 'invalid_header',
-                'description': "Authorization header must have the format 'Bearer {{bearer_token}}'."
-            }, 401)
-#also if authorization header doesnt contain string "bearer"as the prefix to header it is invalit
-    elif header_parts[0].lower() != 'bearer':
-            raise AuthError({
-                'code': 'invalid_header',
-                'description': "The prefix has to be 'Bearer'."
-            }, 401)
+   parts = auth.split()
 
-    return header_parts[1]#return the token
-#raise Exception('Not Implemented')
+   if parts[0].lower() != "bearer":
+        raise AuthError({"code": "invalid_header",
+                        "description":
+                            "Authorization header must start with"
+                            " Bearer"}, 401)
+   elif len(parts) == 1:
+        raise AuthError({"code": "invalid_header",
+                        "description": "Token not found"}, 401)
+   elif len(parts) > 2:
+        raise AuthError({"code": "invalid_header",
+                        "description":
+                            "Authorization header must be"
+                            " Bearer token"}, 401)
+
+   token = parts[1]
+   return token
+
 
 '''
 @DONE implement check_permissions(permission, payload) method
@@ -97,9 +101,13 @@ def check_permissions(permission, payload):
     !!NOTE urlopen has a common certificate error described here: https://stackoverflow.com/questions/50236117/scraping-ssl-certificate-verify-failed-error-for-http-en-wikipedia-org
 '''
 def verify_decode_jwt(token):
+    #getting public key from auth
     jsonurl = urlopen(f'https://{AUTH0_DOMAIN}/.well-known/jwks.json')
     jwks = json.loads(jsonurl.read())
+
+    #getting data from the header
     unverified_header = jwt.get_unverified_header(token)
+    #choosing our key
     rsa_key = {}
     if 'kid' not in unverified_header:
         raise AuthError({
@@ -116,8 +124,10 @@ def verify_decode_jwt(token):
                 'n': key['n'],
                 'e': key['e']
             }
+    #verification
     if rsa_key:
         try:
+            #use key to validate jwt
             payload = jwt.decode(
                 token,
                 rsa_key,
